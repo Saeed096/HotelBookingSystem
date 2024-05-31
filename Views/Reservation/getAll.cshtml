@@ -1,0 +1,86 @@
+﻿@model IEnumerable<HotelBookingSystem.ViewModels.reservationsViewModel>
+
+@{
+    ViewData["Title"] = "Booking List";
+}
+
+<h1 class="text-center text-primary py-3">@ViewData["Title"]</h1>
+
+<div class="container">
+    <div class="card shadow-sm p-4 mb-4 bg-white rounded">
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead class="thead-dark">
+                    <tr>
+                     
+                        <th>
+                            @Html.DisplayNameFor(model => model.name)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.nationalId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.phoneNumber)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.branchName)
+                        </th>
+                  
+                        <th>
+                            @Html.DisplayNameFor(model => model.roomId)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.checkIn)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.checkout)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.cost)
+                        </th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                       
+                            <td>
+                                @Html.DisplayFor(modelItem => item.name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.nationalId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.phoneNumber)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.branchName)
+                            </td>
+                      
+                            <td>
+                                @Html.DisplayFor(modelItem => item.roomId)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.checkIn)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.checkout)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.cost)
+                            </td>
+                            <td>
+                                <a asp-action="Details" asp-route-clientId="@item.clientId" asp-route-roomId="@item.roomId" asp-route-checkIn="@item.checkIn" class="btn btn-info btn-sm">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="text-center">
+        <a asp-action="Create" class="btn btn-success">Create New</a>
+    </div>
+</div>

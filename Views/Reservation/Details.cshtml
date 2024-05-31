@@ -1,0 +1,74 @@
+﻿@model HotelBookingSystem.ViewModels.reservationsViewModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+
+<div class="container py-5">
+    <div class="card shadow-sm p-4 mb-4 bg-white rounded">
+        <div class="card-body">
+            <h4 class="card-title">Reservation Details</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.name)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.name)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.nationalId)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.nationalId)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.phoneNumber)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.phoneNumber)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.branchName)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.branchName)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.branchId)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.branchId)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.clientId)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.clientId)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.roomId)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.roomId)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.checkIn)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.checkIn)
+                </dd>
+                <dt class="col-sm-3 font-weight-bold">
+                    @Html.DisplayNameFor(model => model.checkout)
+                </dt>
+                <dd class="col-sm-9">
+                    @Html.DisplayFor(model => model.checkout)
+                </dd>
+            </dl>
+        </div>
+    </div>
+    <div class="text-center">
+        <a asp-action="getAll" class="btn btn-primary">Back to List</a>
+    </div>
+</div>

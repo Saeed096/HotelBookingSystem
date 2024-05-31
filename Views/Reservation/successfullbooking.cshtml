@@ -1,0 +1,51 @@
+﻿@{
+    List<Room> singleRooms = ViewBag.singleRooms;
+    List<Room> doubleRooms = ViewBag.doubleRooms;
+    List<Room> suitRooms = ViewBag.suitRooms;
+}
+
+<h4 class="text-center text-info py-4">Booked Successfully</h4>
+
+<div class="container">
+    <div class="row">
+        @foreach (var room in singleRooms)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img class="card-img-top" height="235px" src="~/img/single.jpg" alt="Single room image">
+                    <div class="card-body">
+                        <h5 class="card-title">Room no: @room.id</h5>
+                        <p class="card-text">Type: @room.type.ToString()</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @foreach (var room in doubleRooms)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img class="card-img-top" src="~/img/double.jpg" alt="Double room image">
+                    <div class="card-body">
+                        <h5 class="card-title">Room no: @room.id</h5>
+                        <p class="card-text">Type: @room.type.ToString()</p>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @foreach (var room in suitRooms)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    <img class="card-img-top" src="~/img/suitt2.jpg" alt="Suite room image">
+                    <div class="card-body">
+                        <h5 class="card-title">Room no: @room.id</h5>
+                        <p class="card-text">Type: @room.type.ToString()</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+    <a class="btn btn-success" href="/reservation/create"> New reservation</a>
+</div>

@@ -1,0 +1,130 @@
+﻿@model HotelBookingSystem.ViewModels.LoginViewModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Hotel Booking System</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f0f0;
+        }
+
+        .login-container {
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin: 5% auto;
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .login-left {
+            background: url('~/img/login-bg.jpg') no-repeat center center;
+            background-size: cover;
+            width: 40%;
+        }
+
+        .login-right {
+            padding: 2rem;
+            width: 60%;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            padding: 1rem;
+        }
+
+        .btn-primary {
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            padding: 0.75rem 1.5rem;
+        }
+
+            .btn-primary:hover {
+                background: #0056b3;
+            }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-danger {
+            color: #dc3545;
+        }
+
+        .text-success {
+            color: #28a745;
+        }
+
+        .form-check-label {
+            padding-left: 0.25rem;
+        }
+
+        .link {
+            color: #007bff;
+        }
+
+            .link:hover {
+                text-decoration: underline;
+            }
+    </style>
+</head>
+<body>
+    <div class="container login-container">
+        <div class="d-flex">
+            <div class="login-left"></div>
+            <div class="login-right">
+                <div class="text-center">
+                    <h1 class="login-title">Welcome Back</h1>
+                </div>
+                <form asp-action="login" asp-controller="Account" method="post">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="userName" class="control-label"></label>
+                        <input asp-for="userName" class="form-control" />
+                        <span asp-validation-for="userName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="password" class="control-label"></label>
+                        <input asp-for="password" type="password" class="form-control" />
+                        <span asp-validation-for="password" class="text-danger"></span>
+                    </div>
+                    <div class="form-group form-check d-flex justify-content-between">
+                        <label class="form-check-label">
+                            <input class="form-check-input" asp-for="rememberMe" /> @Html.DisplayNameFor(model => model.rememberMe)
+                        </label>
+                        <a href="/account/forgotPassword" class="link">Forgot password?</a>
+                    </div>
+                    <div class="form-group text-center">
+                        <input type="submit" value="Login" class="btn btn-primary" />
+                    </div>
+                    <div class="text-center">
+                        <a href="/account/register" class="btn btn-outline-primary">Create your account</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <partial name="_ValidationScriptsPartial"></partial>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

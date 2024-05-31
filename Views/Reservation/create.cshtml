@@ -1,0 +1,353 @@
+﻿@using System.Security.Claims
+@model generalReservationViewModel
+@{
+    List<hotelBranch> branches = ViewBag.Branches;
+    string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+}
+
+<style>
+    .input-label-div {
+        margin: 5px;
+    }
+
+    .container-box {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+    }
+
+    .card-container {
+        display: flex;
+        flex-direction: row;
+        background-color: white;
+        width: 75%;
+        margin: auto;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 1rem;
+    }
+
+    .card-body {
+        padding: 2rem;
+    }
+
+    .form-container {
+        padding: 2rem;
+        width: 100%;
+    }
+
+    .form-group {
+        margin-bottom: 1rem;
+    }
+
+    .total-cost {
+        /* text-align: center; */
+    }
+
+    .center-button {
+        display: flex;
+        justify-content: center;
+    }
+</style>
+
+<section class="container-box">
+    <div class="card-container">
+        <div class="form-container">
+            <h1 class="text-center my-3 text-primary">Book now</h1>
+            <form asp-action="book" asp-controller="Reservation" method="post" id="myForm" class="offset-1">
+                <div class="col-md-10" id="mainDiv">
+                    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="name" class="control-label"></label>
+                        <input asp-for="name" id="name" value="@User.Identity.Name" class="form-control" type="text" required />
+                        <span asp-validation-for="name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="nationalId" class="control-label"></label>
+                        <input asp-for="nationalId" id="nationalId" class="form-control" type="number" required />
+                        <span asp-validation-for="nationalId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="phoneNumber" class="control-label"></label>
+                        <input asp-for="phoneNumber" id="phoneNumber" class="form-control" type="number" required />
+                        <span asp-validation-for="phoneNumber" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="branchId" class="control-label"></label>
+                        <select id="branchId" class="form-control" required>
+                            @foreach (hotelBranch branch in branches)
+                            {
+                                <option value="@branch.id">@branch.name</option>
+                            }
+                        </select>
+                        <span asp-validation-for="branchId" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="checkIn" class="control-label"></label>
+                        <input asp-for="checkIn" id="checkIn" class="form-control" type="date" required />
+                        <span asp-validation-for="checkIn" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="checkOut" class="control-label"></label>
+                        <input asp-for="checkOut" id="checkOut" class="form-control" type="date" required />
+                        <span asp-validation-for="checkOut" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="singleRoomsNum" class="control-label"></label>
+                        <input asp-for="singleRoomsNum" id="singleRoomsNum" class="form-control" required />
+                        <span asp-validation-for="singleRoomsNum" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="doubleRoomsNum" class="control-label"></label>
+                        <input asp-for="doubleRoomsNum" id="doubleRoomsNum" class="form-control" required />
+                        <span asp-validation-for="doubleRoomsNum" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div">
+                        <label asp-for="suitRoomsNum" class="control-label"></label>
+                        <input asp-for="suitRoomsNum" id="suitRoomsNum" class="form-control" required />
+                        <span asp-validation-for="suitRoomsNum" class="text-danger"></span>
+                    </div>
+                    <div class="form-group input-label-div center-button">
+                        <input type="button" onclick="validateForm() " value="Next" class="btn btn-primary" />
+                    </div>
+                </div>
+
+                <input id="hiddenName" name="name" type="text" class="d-none" />
+                <input id="hiddenNationalId" name="nationalId" type="number" class="d-none" />
+                <input id="hiddenBranchId" name="branchId" type="number" class="d-none" />
+                <input id="hiddenCheckIn" name="checkIn" type="date" class="d-none" />
+                <input id="hiddenCheckOut" name="checkOut" type="date" class="d-none" />
+                <input id="hiddenSingleRoomsNum" name="singleRoomsNum" type="number" class="d-none" />
+                <input id="hiddenDoubleRoomsNum" name="doubleRoomsNum" type="number" class="d-none" />
+                <input id="hiddenSuitRoomsNum" name="suitRoomsNum" type="number" class="d-none" />
+                <input id="hiddenPhoneNumber" name="phoneNumber" type="number" class="d-none" />
+                <input id="hiddenUser" name="user" type="text" value="@userId" class="d-none" />
+
+                <div id="totalCost" class="total-cost"></div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<partial name="_ValidationScriptsPartial"></partial>
+
+<script>
+
+    function validateForm() {
+        var checkInDate = document.getElementById("checkIn").value;
+        var checkOutDate = document.getElementById("checkOut").value;
+
+        if (new Date(checkOutDate) <= new Date(checkInDate)) {
+            alert("Check-out date must be after check-in date");
+            return false;
+        }
+        else {
+            checkRoomAvailability();
+            return true;
+        }
+    }
+
+
+    console.log($("#hiddenUser").val());
+
+    function checkRoomAvailability() {
+        var checkIn = $("#checkIn").val();
+        var checkOut = $("#checkOut").val();
+        var singleRoomsNum = $("#singleRoomsNum").val();
+        var doubleRoomsNum = $("#doubleRoomsNum").val();
+        var suitRoomsNum = $("#suitRoomsNum").val();
+        var branchId = $("#branchId").val();
+        var phoneNumber = $("#phoneNumber").val();
+        var nationalId = $("#nationalId").val();
+        var name = $("#name").val();
+
+        $.ajax({
+            url: `/Reservation/checkReservationAvailability?checkIn=${checkIn}&checkOut=${checkOut}&singleRoomsNum=${singleRoomsNum}&doubleRoomsNum=${doubleRoomsNum}&suitRoomsNum=${suitRoomsNum}&branchId=${branchId}`,
+            success: function (result) {
+                if (!result.availableSingleRooms.isAvailable) {
+                    $('span[data-valmsg-for="singleRoomsNum"]').text(`There are only ${result.availableSingleRooms.availableNum} single rooms available on that date`);
+                }
+                if (!result.availableDoubleRooms.isAvailable) {
+                    $('span[data-valmsg-for="doubleRoomsNum"]').text(`There are only ${result.availableDoubleRooms.availableNum} double rooms available on that date`);
+                }
+                if (!result.availableSuitRooms.isAvailable) {
+                    $('span[data-valmsg-for="suitRoomsNum"]').text(`There are only ${result.availableSuitRooms.availableNum} suites available on that date`);
+                }
+                if (result.availableSingleRooms.isAvailable && result.availableDoubleRooms.isAvailable && result.availableSuitRooms.isAvailable) {
+                    $.ajax({
+                        url: `/Reservation/calculateTotalCost?checkIn=${checkIn}&checkOut=${checkOut}&singleRoomsNum=${singleRoomsNum}&doubleRoomsNum=${doubleRoomsNum}&suitRoomsNum=${suitRoomsNum}`,
+                        success: function (Result) {
+                            if (Result.isOldClient) {
+                                document.getElementById("totalCost").innerHTML += `<p class="text-danger">Total cost: ${Result.totalCost}$</p><span class="text-success">You got 5% off as you are a loyal client</span>`;
+                            } else { 
+                                document.getElementById("totalCost").innerHTML += `<p class="text-danger">Total cost: ${Result.totalCost}$</p>`;
+                            }
+                        }
+                    });
+
+                    $("#hiddenCheckIn").val(checkIn);
+                    $("#hiddenCheckOut").val(checkOut);
+                    $("#hiddenSingleRoomsNum").val(singleRoomsNum);
+                    $("#hiddenDoubleRoomsNum").val(doubleRoomsNum);
+                    $("#hiddenSuitRoomsNum").val(suitRoomsNum); 
+                    $("#hiddenBranchId").val(branchId);
+                    $("#hiddenPhoneNumber").val(phoneNumber);
+                    $("#hiddenNationalId").val(nationalId);
+                    $("#hiddenName").val(name);
+
+                    let isRoomDetailsTagsFound = false;
+                    var singleRoomsDetails = "";
+                    if (Number(singleRoomsNum) > 0) {
+                        singleRoomsDetails = `
+                                <div class="container">
+                                    <h3 class="mb-4">Single Rooms</h3>
+                                    <div class="row">`;
+                        for (let i = 1; i <= Number(singleRoomsNum); i++) {
+                            singleRoomsDetails += `
+                                    <div class="col-12 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Room No. ${i}</h5>
+                                                <div class="form-group mb-2">
+                                                    <label for="adultNum${i}">Select adults number</label>
+                                                    <select id="adultNum${i}" name="adultNum" class="form-control numbersSelect">
+                                                        <option value="1">1</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="childrenNum${i}">Select children number</label>
+                                                        <select id="childrenNum${i}" name="childrenNum" class="form-control numbersSelect">
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                        }
+                        singleRoomsDetails += `</div></div>`;
+                        if (isRoomDetailsTagsFound) {
+                            document.getElementById("mainDiv").innerHTML += singleRoomsDetails;
+                        }
+                        else {
+                            document.getElementById("mainDiv").innerHTML = singleRoomsDetails;
+                            isRoomDetailsTagsFound = true; 
+                        }
+                    }
+
+                    var doubleRoomsDetails = "";
+                    if (Number(doubleRoomsNum) > 0) {
+                        doubleRoomsDetails = `
+                                <div class="container">
+                                    <h3 class="mb-4">Double Rooms</h3>
+                                    <div class="row">`;
+                        for (let i = 1; i <= Number(doubleRoomsNum); i++) {
+                            doubleRoomsDetails += `
+                                    <div class="col-12 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Room No. ${i}</h5>
+                                                <div class="form-group mb-2">
+                                                    <label for="adultNum${i}">Select adults number</label>
+                                                        <select id="adultNum${i}" name="adultNum" class="form-control numbersSelect">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="childrenNum${i}">Select children number</label>
+                                                        <select id="childrenNum${i}" name="childrenNum" class="form-control numbersSelect">
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                        }
+                        doubleRoomsDetails += `</div></div>`;
+                        if (isRoomDetailsTagsFound) {
+                            document.getElementById("mainDiv").innerHTML += doubleRoomsDetails;
+                        }
+                        else {
+                            document.getElementById("mainDiv").innerHTML = doubleRoomsDetails;
+                            isRoomDetailsTagsFound = true;
+                        }
+                    }
+
+                    var suitRoomsDetails = "";
+                    if (Number(suitRoomsNum) > 0) {
+                        suitRoomsDetails = `
+                                <div class="container">
+                                    <h3 class="mb-4">Suite Rooms</h3>
+                                    <div class="row">`;
+                        for (let i = 1; i <= Number(suitRoomsNum); i++) {
+                            suitRoomsDetails += `
+                                    <div class="col-12 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Room No. ${i}</h5>
+                                                <div class="form-group mb-2">
+                                                    <label for="adultNum${i}">Select adults number</label>
+                                                        <select id="adultNum${i}" name="adultNum" class="form-control numbersSelect">
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group mb-2">
+                                                    <label for="childrenNum${i}">Select children number</label>
+                                                        <select id="childrenNum${i}" name="childrenNum" class="form-control numbersSelect">
+                                                        <option value="0">0</option>
+                                                        <option value="1">1</option>
+                                                        <option value="2">2</option>
+                                                        <option value="3">3</option>
+                                                        <option value="4">4</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>`;
+                        }
+                        suitRoomsDetails += `</div></div>`;
+                        if (isRoomDetailsTagsFound) {
+                            document.getElementById("mainDiv").innerHTML += suitRoomsDetails;
+                        }
+                        else {
+                            document.getElementById("mainDiv").innerHTML = suitRoomsDetails;
+                            isRoomDetailsTagsFound = true;
+                        }
+                    }
+
+                    document.getElementById("mainDiv").innerHTML += "<div class='center-button'><button class='btn btn-info' type='submit'>Book</button></div>";
+                }
+            }
+        });
+    }
+
+
+    document.getElementById('myForm').addEventListener('submit', function (event) {
+        event.preventDefault(); 
+         
+        let inputs = document.querySelectorAll('.numbersSelect');
+        let roomsCapacity = [];  
+        inputs.forEach(function (input) {
+            roomsCapacity.push(parseInt(input.value));
+        });
+
+        let jsonData = JSON.stringify(roomsCapacity);
+
+        let hiddenInput = document.createElement('input');
+        hiddenInput.type = 'hidden';
+        hiddenInput.name = 'jsonData';
+        hiddenInput.value = jsonData;
+
+        this.appendChild(hiddenInput);
+        console.log(hiddenInput.value);
+        this.submit();
+    });
+</script>
