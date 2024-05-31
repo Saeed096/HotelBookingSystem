@@ -2,6 +2,9 @@
  
 Extra features : 
 - using SMTP to send emails
+- Unit of work
+- Generic repository
+- N-tier architecture
 - Using identity and roles 
 - Using Automapper
 - force email conformation on register 
